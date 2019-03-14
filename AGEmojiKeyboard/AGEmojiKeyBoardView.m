@@ -50,7 +50,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
   if ([self.dataSource respondsToSelector:@selector(defaultCategoryForEmojiKeyboardView:)]) {
     return [self.dataSource defaultCategoryForEmojiKeyboardView:self];
   }
-  return AGEmojiKeyboardViewCategoryImageRecent;
+  return AGEmojiKeyboardViewCategoryImageFace;
 }
 
 - (NSUInteger)recentEmojisMaintainedCount {
@@ -131,7 +131,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     [self setSelectedCategoryImageInSegmentControl:self.segmentsBar
                                            atIndex:self.defaultSelectedCategory];
     self.segmentsBar.selectedSegmentIndex = self.defaultSelectedCategory;
-    [self addSubview:self.segmentsBar];
+//    [self addSubview:self.segmentsBar];
 
     self.pageControl = [[UIPageControl alloc] init];
     self.pageControl.hidesForSinglePage = YES;
@@ -139,7 +139,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     self.pageControl.backgroundColor = [UIColor clearColor];
     CGSize pageControlSize = [self.pageControl sizeForNumberOfPages:3];
     CGSize frameSize = CGSizeMake(CGRectGetWidth(self.bounds),
-                                  CGRectGetHeight(self.bounds) - CGRectGetHeight(self.segmentsBar.bounds) - pageControlSize.height);
+                                  CGRectGetHeight(self.bounds)- pageControlSize.height);
     NSUInteger numberOfPages = [self numberOfPagesForCategory:self.category
                                                   inFrameSize:frameSize];
     self.pageControl.numberOfPages = numberOfPages;
@@ -155,9 +155,9 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     [self addSubview:self.pageControl];
 
     CGRect scrollViewFrame = CGRectMake(0,
-                                        CGRectGetHeight(self.segmentsBar.bounds),
+                                        0,
                                         CGRectGetWidth(self.bounds),
-                                        CGRectGetHeight(self.bounds) - CGRectGetHeight(self.segmentsBar.bounds) - pageControlSize.height);
+                                        CGRectGetHeight(self.bounds) - pageControlSize.height);
     self.emojiPagesScrollView = [[UIScrollView alloc] initWithFrame:scrollViewFrame];
     self.emojiPagesScrollView.pagingEnabled = YES;
     self.emojiPagesScrollView.showsHorizontalScrollIndicator = NO;
@@ -172,7 +172,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 - (void)layoutSubviews {
   CGSize pageControlSize = [self.pageControl sizeForNumberOfPages:3];
   NSUInteger numberOfPages = [self numberOfPagesForCategory:self.category
-                                                inFrameSize:CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - CGRectGetHeight(self.segmentsBar.bounds) - pageControlSize.height)];
+                                                inFrameSize:CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - pageControlSize.height)];
 
   NSInteger currentPage = (self.pageControl.currentPage > numberOfPages) ? numberOfPages : self.pageControl.currentPage;
 
@@ -186,9 +186,9 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
   self.pageControl.frame = CGRectIntegral(pageControlFrame);
 
   self.emojiPagesScrollView.frame = CGRectMake(0,
-                                               CGRectGetHeight(self.segmentsBar.bounds),
+                                               0,
                                                CGRectGetWidth(self.bounds),
-                                               CGRectGetHeight(self.bounds) - CGRectGetHeight(self.segmentsBar.bounds) - pageControlSize.height);
+                                               CGRectGetHeight(self.bounds) - pageControlSize.height);
   [self.emojiPagesScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
   self.emojiPagesScrollView.contentOffset = CGPointMake(CGRectGetWidth(self.emojiPagesScrollView.bounds) * currentPage, 0);
   self.emojiPagesScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.emojiPagesScrollView.bounds) * numberOfPages,
